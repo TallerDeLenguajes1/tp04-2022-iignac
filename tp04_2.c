@@ -11,8 +11,11 @@ int Duracion; // entre 10 – 100
 
 void cargarTareasPendientes(Tarea** TPendientes, int CantT);
 void mostrarPendientesYmover(Tarea** TPendientes, Tarea** TRealizadas, int CantT);
-void mostrarTareas(Tarea** Tarea, int CantT);
-void mostrarUnaTarea(Tarea* Tarea, int i);
+void mostrarTareas(Tarea** ListaTareas, int CantT);
+void mostrarUnaTarea(Tarea* UnaTarea);
+Tarea* buscarTareaID(Tarea** TPendientes, Tarea** TRealizadas, int CantT, int id);
+Tarea* buscarTareaPalabra(Tarea** TPendientes, Tarea** TRealizadas, int CantT, char* Palabra);
+void liberarMemoria(Tarea** ListaTareas, int CantT);
 
 int main()
 {   
@@ -48,6 +51,9 @@ int main()
     printf("#### Tareas PENDIENTES ####\n");
     mostrarTareas(TareasPendientes, CantidadTareas);
     
+    liberarMemoria(TareasPendientes, CantidadTareas);
+    liberarMemoria(TareasRealizadas, CantidadTareas);
+    
     return 0;
 }
 
@@ -64,12 +70,13 @@ void cargarTareasPendientes(Tarea** TPendientes, int CantT)
         printf("Ingrese la descripcion de la tarea %d:\n",i+1);
         fflush(stdin);
         gets(Buff);
-        TPendientes[i]->Descripcion = (char*)malloc((strlen(Buff)+1)*sizeof(char*));
+        TPendientes[i]->Descripcion = (char*)malloc((strlen(Buff)+1)*sizeof(char));
+        // TPendientes[i]->Descripcion = (char*)malloc(strlen(Buff)+1);
+        // porque char vale 1 y es como multiplicar por 1
         strcpy(TPendientes[i]->Descripcion, Buff);
 
         TPendientes[i]->Duracion = 10+(rand()%91);
     }
-
     free(Buff);
 }
 
@@ -81,7 +88,7 @@ void mostrarPendientesYmover(Tarea** TPendientes, Tarea** TRealizadas, int CantT
     for (int i = 0; i < CantT; i++)
     {   
         printf("\n");
-        mostrarUnaTarea(TPendientes[i], i);
+        mostrarUnaTarea(TPendientes[i]);
         printf("La tarea fue realizada? 1(Si), 0(No)\n");
         scanf("%d",&opcion);
 
@@ -97,24 +104,37 @@ void mostrarPendientesYmover(Tarea** TPendientes, Tarea** TRealizadas, int CantT
     }
 }
 
-void mostrarTareas(Tarea** Tareas, int CantT)
+void mostrarTareas(Tarea** ListaTareas, int CantT)
 {
     for (int i = 0; i < CantT; i++)
     {
-        if (Tareas[i] != NULL) // *(Tareas + i) != NULL
+        if (ListaTareas[i] != NULL) // *(Tareas + i) != NULL
         {
-            mostrarUnaTarea(Tareas[i], i);
+            mostrarUnaTarea(ListaTareas[i]);
         }
     }
 }
 
-void mostrarUnaTarea(Tarea* Tarea, int i)
+void mostrarUnaTarea(Tarea* UnaTarea)
 {
-    printf("===> Tarea %d\n",i+1);
-    printf("TareaID: %d\n",Tarea->TareaID); // (*(Tarea + i))->TareaID
-    printf("Descripcion: %s\n",Tarea->Descripcion);
-    printf("Duracion: %d\n",Tarea->Duracion);
+    printf("===> Tarea %d\n",UnaTarea->TareaID);
+    printf("TareaID: %d\n",UnaTarea->TareaID); // (*(Tarea + i))->TareaID
+    printf("Descripcion: %s\n",UnaTarea->Descripcion);
+    printf("Duracion: %d\n",UnaTarea->Duracion);
     printf("\n");
+}
+
+void liberarMemoria(Tarea** ListaTareas, int CantT)
+{
+    for (int i = 0; i < CantT; i++)
+    {
+        if (ListaTareas[i] != NULL)
+        {
+            free(ListaTareas[i]->Descripcion);
+            free(ListaTareas[i]);
+        }
+        free(ListaTareas);
+    }
 }
 
 /* OTRA OPCION DE MOVER LAS TAREAS:
@@ -135,7 +155,7 @@ void mostrarPendientesYmover(Tarea** TPendientes, Tarea** TRealizadas, int CantT
         if (opcion)
         {   
             TRealizadas[i]->TareaID = TPendientes[i]->TareaID;
-            TRealizadas[i]->Descripcion = (char*)malloc((strlen(TPendientes[i]->Descripcion)+1)*sizeof(char*));
+            TRealizadas[i]->Descripcion = (char*)malloc((strlen(TPendientes[i]->Descripcion)+1)*sizeof(char*)); <=== RESERVO MEMORIA DINAMICA
             strcpy(TRealizadas[i]->Descripcion, TPendientes[i]->Descripcion);
             TRealizadas[i]->Duracion = TPendientes[i]->Duracion;
             TPendientes[i] = NULL;
