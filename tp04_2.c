@@ -50,6 +50,23 @@ int main()
 
     printf("#### Tareas PENDIENTES ####\n");
     mostrarTareas(TareasPendientes, CantidadTareas);
+
+    printf("-------------------------------\n");
+    printf("\n");
+
+    int id;
+    printf("Ingrese el numero de ID de la tarea a buscar (del 1 al %d):\n",CantidadTareas);
+    scanf("%d",&id);
+    mostrarUnaTarea(BuscarTareaID(TareasPendientes, TareasRealizadas, CantidadTareas, id));
+    
+    printf("-------------------------------\n");
+    printf("\n");
+
+    char PalabraClave[20];
+    puts("Ingrese la palabra clave de la tarea a buscar:");
+    fflush(stdin);
+    gets(PalabraClave);
+    mostrarUnaTarea(BuscarTareaPalabra(TareasPendientes, TareasRealizadas, CantidadTareas, PalabraClave));
     
     liberarMemoria(TareasPendientes, CantidadTareas);
     liberarMemoria(TareasRealizadas, CantidadTareas);
