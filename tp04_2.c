@@ -13,7 +13,8 @@ void cargarTareasPendientes(Tarea** TPendientes, int CantT);
 void mostrarPendientesYmover(Tarea** TPendientes, Tarea** TRealizadas, int CantT);
 void mostrarTareas(Tarea** ListaTareas, int CantT);
 void mostrarUnaTarea(Tarea* UnaTarea);
-Tarea* BuscarTarea(Tarea** TPendientes, Tarea** TRealizadas, int CantT, char* Palabra);
+Tarea* BuscarTareaPalabra(Tarea** TPendientes, Tarea** TRealizadas, int CantT, char* Palabra);
+Tarea* BuscarTareaID(Tarea** TPendientes, Tarea** TRealizadas, int CantT, int id);
 void liberarMemoria(Tarea** ListaTareas, int CantT);
 
 int main()
@@ -136,7 +137,7 @@ void liberarMemoria(Tarea** ListaTareas, int CantT)
     }
 }
 
-Tarea* BuscarTarea(Tarea** TPendientes, Tarea** TRealizadas, int CantT, char* Palabra)
+Tarea* BuscarTareaPalabra(Tarea** TPendientes, Tarea** TRealizadas, int CantT, char* Palabra)
 {
     for (int i = 0; i < CantT; i++)
     {
@@ -147,6 +148,24 @@ Tarea* BuscarTarea(Tarea** TPendientes, Tarea** TRealizadas, int CantT, char* Pa
         else
         {
             if ((TRealizadas[i]!=NULL) && strstr(TRealizadas[i]->Descripcion, Palabra))
+            {
+                return TRealizadas[i];
+            } 
+        }
+    }
+}
+
+Tarea* BuscarTareaID(Tarea** TPendientes, Tarea** TRealizadas, int CantT, int id)
+{
+    for (int i = 0; i < CantT; i++)
+    {
+        if ((TPendientes[i]!=NULL) && (id == TPendientes[i]->TareaID))
+        {
+            return TPendientes[i];
+        }
+        else
+        {
+            if ((TRealizadas[i]!=NULL) && (id == TRealizadas[i]->TareaID))
             {
                 return TRealizadas[i];
             } 
