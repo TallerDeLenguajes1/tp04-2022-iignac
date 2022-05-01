@@ -4,9 +4,9 @@
 #include <time.h>
 
 struct Tarea {
-int TareaID; //Numerado en ciclo iterativo
-char *Descripcion; //
-int Duracion; // entre 10 – 100
+    int TareaID; //Numerado en ciclo iterativo
+    char *Descripcion; //
+    int Duracion; // entre 10 – 100
 }typedef Tarea;
 
 void cargarTareasPendientes(Tarea** TPendientes, int CantT);
